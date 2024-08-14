@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import com.example.Blog_Spot_Backend.entity.userEntity.UserEntity;
 import com.example.Blog_Spot_Backend.model.userModel.UserModel;
 import com.example.Blog_Spot_Backend.repository.userRepository.UserRepository;
+import com.example.Blog_Spot_Backend.service.imageService.ImageService;
+import com.example.Blog_Spot_Backend.utilityClass.UploadResponse;
 
 
 
@@ -14,6 +16,11 @@ public class UserService {
 
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    ImageService imageService;
+
+    
 
     public String registerUser(UserModel data) {
 
@@ -56,14 +63,20 @@ public class UserService {
     }
 
     public String deleteUser ( String email ){
-        boolean isExist = userRepo.existsById(email);
-        if ( isExist){
 
-            userRepo.deleteById(email);
-            return "deleted successfully";
-        }else {
-            return "your id is not exist...";
+        UserEntity user = userRepo.findById(email).orElse(null);
+
+        if (user == null) {
+            return "user not exit";
         }
+        if (user.getPublicId() != null) {
+            imageService.deleteImageFromcloudinary(user.getPublicId());
+        }
+        
+
+        userRepo.deleteById(email);
+        return "deleted successfully";
+       
        
     }
 
@@ -97,10 +110,31 @@ public class UserService {
         if ( data == null ){
             return user;
         }else {
+            if ( data.getUrl() != null ){
+                user.setUrl(data.getUrl());
+            }
             user.setEmail(data.getEmail());
             user.setPassword(data.getPassword());
             user.setFullName(data.getFullName());
             return user;
         }
     }
+
+
+    public String uploadImagesMethod ( UploadResponse data , String id){
+
+        UserEntity user = userRepo.findById(id).orElse(null);
+
+        if (user == null) {
+            return "user not exit";
+        }
+        if ( user.getPublicId() != null ){
+            imageService.deleteImageFromcloudinary(user.getPublicId());
+        }
+        user.setUrl(data.getUrl());
+        user.setPublicId(data.getPublicId());
+        userRepo.save(user);
+        return "successrfully uploaded imaages";
+    }
+
 }
