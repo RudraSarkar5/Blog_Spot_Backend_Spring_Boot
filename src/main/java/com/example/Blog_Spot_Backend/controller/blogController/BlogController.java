@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.Blog_Spot_Backend.model.blogModel.BlogModel;
 import com.example.Blog_Spot_Backend.service.blogService.BlogService;
 import com.example.Blog_Spot_Backend.service.imageService.ImageService;
+import com.example.Blog_Spot_Backend.utilityClass.UploadResponse;
 
 import java.util.List;
 
@@ -55,9 +56,10 @@ public class BlogController {
         }
        
         if(imageFile != null ){
-           String url = imageService.uploadImage(imageFile);
+           UploadResponse response = imageService.uploadImage(imageFile);
            bm.setContentType("MEDIA");
-           bm.setContent(url);
+           bm.setContent(response.getUrl());
+           bm.setPublicId(response.getPublicId());
         }else {
             bm.setContent(content);
             bm.setContentType("TEXT");

@@ -22,6 +22,15 @@ public class BlogEntity {
     private String content;
     private String caption;
     private String contentType;
+    private String publicId;
+
+    public void setPublicId(String publicId) {
+        this.publicId = publicId;
+    }
+
+    public String getPublicId() {
+        return publicId;
+    }
 
     @ManyToOne
     @JoinColumn(name = "createdBy") 
