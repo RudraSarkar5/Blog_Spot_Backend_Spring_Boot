@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+
 
 @Entity
 @Table(name = "blog_data")
@@ -21,10 +21,26 @@ public class BlogEntity {
     private Long id;
     private String content;
     private String caption;
+    private String contentType;
 
     @ManyToOne
-    @JoinColumn(name = "createdBy", referencedColumnName = "email") 
+    @JoinColumn(name = "createdBy") 
     private UserEntity createdBy;
+
+    public UserEntity getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(UserEntity createdBy) {
+        this.createdBy = createdBy;
+    }
+    public String getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
     public String getContent() {
         return content;
@@ -38,9 +54,7 @@ public class BlogEntity {
         return id;
     }
 
-    public UserEntity getCreatedBy() {
-        return createdBy;
-    }
+   
 
     public void setContent(String content) {
         this.content = content;
@@ -50,9 +64,7 @@ public class BlogEntity {
         this.caption = caption;
     }
 
-    public void setCreatedBy(UserEntity createdBy) {
-        this.createdBy = createdBy;
-    }
+   
 
     
    

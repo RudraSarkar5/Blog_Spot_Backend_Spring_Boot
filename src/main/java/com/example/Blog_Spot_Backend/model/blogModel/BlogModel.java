@@ -9,4 +9,5 @@ public class BlogModel {
     private String content;
     private String caption;
     private String createdBy;
+    private String contentType;
 }

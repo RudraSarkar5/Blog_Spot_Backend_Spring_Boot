@@ -3,7 +3,7 @@ package com.example.Blog_Spot_Backend.service.blogService;
 import java.util.List;
 import java.util.ArrayList;
 
-import java.util.Optional;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +37,7 @@ public class BlogService {
         }
         blog.setCaption(data.getCaption());
         blog.setContent(data.getContent());
+        blog.setContentType(data.getContentType());
         blogRepo.save(blog);
         return "successfully inserted data";
     }
@@ -50,6 +51,7 @@ public class BlogService {
             b.setCaption(blogEntity.getCaption());
             b.setId(blogEntity.getId());
             b.setContent(blogEntity.getContent());
+            b.setContentType(blogEntity.getContentType());
             UserEntity user = blogEntity.getCreatedBy();
             b.setCreatedBy(user.getEmail());
             allBlog.add(b);
@@ -69,7 +71,7 @@ public class BlogService {
     }
 
     public String updateBlog(Long id , BlogModel data){
-        
+
         BlogEntity blog = blogRepo.findById(id).orElse(null);
 
         if (blog == null) {
