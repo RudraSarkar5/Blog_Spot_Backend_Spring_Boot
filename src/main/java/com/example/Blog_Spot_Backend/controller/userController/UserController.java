@@ -3,7 +3,6 @@ package com.example.Blog_Spot_Backend.controller.userController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Blog_Spot_Backend.model.userModel.UserModel;
@@ -24,28 +23,28 @@ public class UserController {
 
     @PostMapping("login")
     public String postLoginUser(@RequestBody UserModel data) {
-
         return userService.loginUser(data);
     }
 
     @PostMapping("signUp")
     public String postMethodName(@RequestBody UserModel data) {
-
-        // System.out.println("got their request...");
-        // return "successfully created user";
         return userService.registerUser(data);
     }
 
     @DeleteMapping("/delete-user/{id}")
     public String deleteMethodName(@PathVariable String id) {
-        return "deleted successfully.";
+        return userService.deleteUser(id);
     }
 
     @PutMapping("/update-user/{id}")
-    public String putMethodName(@PathVariable String id, @RequestBody String entity) {
-        // TODO: process PUT request
-
-        return entity;
+    public String putMethodName(@PathVariable String id, @RequestBody UserModel data) {
+        return userService.updataUser( id, data);
     }
+
+    @GetMapping("/get-user-details/{id}")
+    public UserModel getMethodName(@PathVariable String id) {
+        return userService.getUserDetails(id);
+    }
+    
 
 }
