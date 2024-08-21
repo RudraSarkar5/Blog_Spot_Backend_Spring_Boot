@@ -1,11 +1,14 @@
 package com.example.Blog_Spot_Backend.repository.userRepository;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.Blog_Spot_Backend.entity.userEntity.UserEntity;
+import java.util.List;
+
 
 
 
@@ -17,5 +20,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     @Query("SELECT u FROM UserEntity u WHERE u.email = :email")
     UserEntity getRegisteredUser(@Param("email") String email);
+
+    UserEntity  findByEmail(String email);
    
 }

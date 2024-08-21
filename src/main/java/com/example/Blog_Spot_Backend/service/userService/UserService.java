@@ -1,6 +1,13 @@
 package com.example.Blog_Spot_Backend.service.userService;
 
+import java.net.Authenticator;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.Blog_Spot_Backend.entity.userEntity.UserEntity;
@@ -20,9 +27,20 @@ public class UserService {
     @Autowired
     ImageService imageService;
 
+    @Autowired
+    AuthenticationManager authManager;
+
+    @Autowired
+    JwtService jwtService;
+
+    public BCryptPasswordEncoder bCryptPasswordEncoder (){
+        return new BCryptPasswordEncoder();
+    }
+
     
 
     public String registerUser(UserModel data) {
+        
 
         boolean exist = userRepo.existsByEmail(data.getEmail());
 
@@ -35,7 +53,8 @@ public class UserService {
 
             user.setEmail(data.getEmail());
             user.setFullName(data.getFullName());
-            user.setPassword(data.getPassword());
+           
+            user.setPassword(bCryptPasswordEncoder().encode(data.getPassword()));
 
             userRepo.save(user);
 
@@ -45,19 +64,31 @@ public class UserService {
     }
 
     public String loginUser(UserModel data) {
+        // String email = data.getEmail();
+        // System.out.println(email);
 
-        UserEntity user = userRepo.getRegisteredUser(data.getEmail());
+        // UserEntity user = userRepo.getRegisteredUser(email);
+        // System.out.println("the user value is "+user);
 
-        if (user == null) {
+        // if (user == null) {
 
-            return " No user found . Please create a user first...";
+        //     return " No user found . Please create a user first...";
+        // } else {
+
+        //     if (data.getPassword().equals(user.getPassword())) {
+        //         return " login successfully...";
+        //     } else {
+        //         return "password not matching ...";
+        //     }
+        // }
+        Authentication authentication =  authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(data.getEmail(), data.getPassword()));
+
+        if (authentication.isAuthenticated()) {
+            return jwtService.getToken(data.getEmail());
+            // return "login successfully";
         } else {
-
-            if (data.getPassword().equals(user.getPassword())) {
-                return " login successfully...";
-            } else {
-                return "password not matching ...";
-            }
+            return "Login failed";
         }
 
     }

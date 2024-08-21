@@ -11,6 +11,8 @@ import com.example.Blog_Spot_Backend.service.imageService.ImageService;
 import com.example.Blog_Spot_Backend.service.userService.UserService;
 import com.example.Blog_Spot_Backend.utilityClass.UploadResponse;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,19 +30,31 @@ public class UserController {
     @Autowired
     ImageService imageService;
 
+    @PostMapping("hi")
+    public String hiMethod() {
+        return "Hey welcome bro...";
+    }
+    
+
     @PostMapping("login")
     public String postLoginUser(@RequestBody UserModel data) {
         return userService.loginUser(data);
+        // return "login";
     }
 
     @PostMapping("signUp")
     public String postMethodName(@RequestBody UserModel data) {
+       
         return userService.registerUser(data);
     }
 
-    @DeleteMapping("/delete-user/{id}")
-    public String deleteMethodName(@PathVariable String id) {
-        return userService.deleteUser(id);
+     @DeleteMapping("/delete-user/{id}")
+    public String deleteMethodName(@PathVariable String id, HttpServletRequest request) {
+        // Retrieve the username from the request attributes
+        String username = (String) request.getAttribute("username");
+
+        // Call the service method and pass the username along with the user ID
+        return userService.deleteUser( username);
     }
 
     @PutMapping("/update-user/{id}")
